@@ -29,20 +29,29 @@ const InsertData = async (req, res, next) => {
         console.log(err)
     }
 };
-const UpdateData = async (req, res, next) => {
-    try{
-        const {id,task,time} = req.body;
-        let NewTask =await new TodoShema.findOneAndUpdate({id:'612d686d21fef29241e71b9d'},{$set:{Task:'New MongoDB Tutorial'}})
-        return res.status(201).json(NewTask)
-    }catch(err){
-        console.log(err)
-    }
-};
 const DeleteData = async(req, res, next) => {
     try{
         let idTask = req.params.id
         let NewTask =await TodoShema.deleteOne({id:idTask})
         return res.status(200).json("success")
+    }catch(err){
+        console.log(err)
+    }
+};
+const UpdateData = async (req, res, next) => {
+    try{
+    const {id,task} = req.body;
+    const idTask = id ;
+    // this option instructs the method to create a document if no documents match the filter
+    const options = { upsert: true };
+    // create a document that sets the plot of the movie
+    const updateDoc = {
+      $set: {
+        Task:task
+      },
+    };
+        const result = await TodoShema.findByIdAndUpdate(idTask, updateDoc, options);
+        return res.status(201).json("update succefly")
     }catch(err){
         console.log(err)
     }
